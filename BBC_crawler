@@ -1,0 +1,77 @@
+from bs4 import BeautifulSoup
+import requests
+
+url='https://www.bbc.com/news'
+response=requests.get(url)
+print(response)
+
+soup_obj=BeautifulSoup(response.content,'html5lib')
+
+
+# Accessing all headlines and links as  string text
+for item in soup_obj.findAll('a',class_='gs-c-promo-heading gs-o-faux-block-link__overlay-link gel-pica-bold nw-o-link-split__anchor'):
+    try:
+            headline = item.prettify()
+            print(headline)
+            print('----------------------------------------')
+    
+    except Exception as e:
+        pass
+  
+  
+# Extracting all the headlines
+for item in soup_obj.findAll('a',class_='gs-c-promo-heading gs-o-faux-block-link__overlay-link gel-pica-bold nw-o-link-split__anchor'):
+    try:
+            headline = item.get_text()
+            print(headline)
+            print('----------------------------------------')
+    
+    except Exception as e:
+        pass
+        
+        
+# Extracting all the news links
+link_list=[]
+for item in soup_obj.findAll('a',class_='gs-c-promo-heading gs-o-faux-block-link__overlay-link gel-pica-bold nw-o-link-split__anchor'):
+    try:
+            full_text = item.prettify()
+            initial_link=full_text.split('href="')
+            if 'span' in full_text:
+                link_2=initial_link[1].split('<span')
+                link=link_2[0]
+                final_link=link[0:-4]
+                link_generator='https://www.bbc.com'
+                generated_link=''
+                if final_link[0]!='h':
+                    generated_link=link_generator+final_link
+                    print(generated_link)
+                    print('----------------------------------------')
+                    link_list.append(generated_link)
+                else:    
+                    print(final_link)
+                    print('----------------------------------------')
+                    link_list.append(final_link)
+            else:
+                link_2=initial_link[1].split('<h3')
+                link=link_2[0]
+                final_link=link[0:-4]
+                link_generator='https://www.bbc.com'
+                generated_link=''
+                if final_link[0]!='h':
+                    generated_link=link_generator+final_link
+                    print(generated_link)
+                    print('----------------------------------------')
+                    link_list.append(generated_link)
+                else:    
+                    print(final_link)
+                    print('----------------------------------------')
+                    link_list.append(final_link)
+    
+    except Exception as e:
+        pass
+        
+        
+        
+# Printing all the links from the list
+for item in link_list:
+    print(item)
